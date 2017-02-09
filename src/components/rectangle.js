@@ -1,18 +1,11 @@
 import React, { Component } from 'react';
+import { ResizableBox } from 'react-resizable';
 
 
 class Rectangle extends Component {
-
   render() {
-    const style = {
-      fill: this.props.customColor ? this.props.customColor : 'rgb(0,0,255)',
-      strokeWidth:1,
-      stroke: 'rgb(0,0,0)',
-    };
     return (
-      <svg width="400" height="110">
-        <rect width="300" height="100" style={style} />
-      </svg>
+      <ResizableBox color={this.props.customColor} width={200} height={120} lockAspectRatio={true}  minConstraints={[50, 30]}/>
     );
   }
 }

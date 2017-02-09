@@ -9,12 +9,12 @@ const styles = {
     fontWeight: 'bold'
   },
   game: {
+    padding: 5,
     margin: '0 auto',
     height: 500,
-    width: '70%',
-    minWidth: 300,
+    width: 700,
     borderRadius: 12,
-    border: '2px solid gray',
+    border: '2px solid black',
     backgroundColor: 'white'
   },
   buttons: {
@@ -49,7 +49,7 @@ class App extends Component {
       <div>
         <h1 style={styles.head}> Rectangle Game </h1>
         <div style={styles.buttons}>
-          <Button onClick={this._addRect} bsStyle="primary">Start</Button>
+          <Button onClick={this._addRect} bsStyle="primary">Add Rectangle!</Button>
         </div>
         <div style={styles.game} id="board">
           {this.state.rectList}
