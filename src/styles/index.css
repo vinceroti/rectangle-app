@@ -5,6 +5,9 @@ body {
   font-family: 'Comfortaa', sans-serif;
   background-image: url('../images/background.png');
 }
+
+/*Resizable box css*/
+
 .react-resizable {
   display: inline-block;
   position: relative;
