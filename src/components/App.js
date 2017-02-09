@@ -31,6 +31,7 @@ class App extends Component {
     this._addRect = this._addRect.bind(this);
   }
 
+
   _addRect() {
     let randColor = () => {
       let randNum = () => { return Math.floor(Math.random() * 256); } ;
