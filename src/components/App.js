@@ -11,8 +11,8 @@ const styles = {
   game: {
     padding: 5,
     margin: '0 auto',
-    height: 500,
-    width: 700,
+    height: '50%',
+    width: '70%',
     borderRadius: 12,
     border: '2px solid black',
     backgroundColor: 'white'
