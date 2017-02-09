@@ -8,11 +8,6 @@ body {
 
 /*Resizable box css*/
 
-.react-resizable {
-  display: inline-block;
-  position: relative;
-  border: 1px solid black;
-}
 .react-resizable-handle {
   position: absolute;
   width: 20px;
