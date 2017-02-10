@@ -29,21 +29,30 @@ class App extends Component {
 
     this.state = { rectList: []};
     this._addRect = this._addRect.bind(this);
+    this._removeRect = this._removeRect.bind(this);
   }
 
+  _randColor() {
+    let randNum = () => { return Math.floor(Math.random() * 256); } ;
+    return `rgb(${randNum()},${randNum()},${randNum()})`;
+  }
 
   _addRect() {
-    let randColor = () => {
-      let randNum = () => { return Math.floor(Math.random() * 256); } ;
-      return `rgb(${randNum()},${randNum()},${randNum()})`;
-    };
-
     const rectList = this.state.rectList;
 
     this.setState({
-      rectList: rectList.concat(<Rectangle key={rectList.length + 1} customColor={randColor()}/>)
+      rectList: rectList.concat(<Rectangle key={rectList.length + 1} customColor={this._randColor()}/>)
     });
   }
+
+  _removeRect() {
+    let rectList = this.state.rectList
+    rectList.pop();
+    this.setState({
+      rectList: rectList
+    });
+  }
+
 
   render() {
     return (
@@ -51,6 +60,7 @@ class App extends Component {
         <h1 style={styles.head}> Rectangle Game </h1>
         <div style={styles.buttons}>
           <Button onClick={this._addRect} bsStyle="primary">Add Rectangle!</Button>
+          <Button onClick={this._removeRect} bsStyle="primary">Delete Rectangle!</Button>
         </div>
         <div style={styles.game} id="board">
           {this.state.rectList}
