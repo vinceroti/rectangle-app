@@ -19,7 +19,9 @@ const styles = {
   },
   buttons: {
     textAlign: 'center',
-    marginBottom: 10
+  },
+  button: {
+    margin: '5px'
   }
 };
 
@@ -27,9 +29,18 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { rectList: []};
+    this.state = { rectList: [] };
     this._addRect = this._addRect.bind(this);
     this._removeRect = this._removeRect.bind(this);
+  }
+  componentWillMount() {
+    let rectList = this.state.rectList;
+    for (let i = 0; i < localStorage.getItem('rectList'); i++){
+      rectList = rectList.concat(<Rectangle key={rectList.length + 1} customColor={this._randColor()}/>);
+    }
+    this.setState({
+      rectList: rectList
+    });
   }
 
   _randColor() {
@@ -39,18 +50,19 @@ class App extends Component {
 
   _addRect() {
     const rectList = this.state.rectList;
-
     this.setState({
       rectList: rectList.concat(<Rectangle key={rectList.length + 1} customColor={this._randColor()}/>)
     });
+    localStorage.setItem('rectList', rectList.length + 1);
   }
 
   _removeRect() {
-    let rectList = this.state.rectList
+    let rectList = this.state.rectList;
     rectList.pop();
     this.setState({
       rectList: rectList
     });
+    localStorage.setItem('rectList', rectList.length);
   }
 
 
@@ -59,8 +71,8 @@ class App extends Component {
       <div>
         <h1 style={styles.head}> Rectangle Game </h1>
         <div style={styles.buttons}>
-          <Button onClick={this._addRect} bsStyle="primary">Add Rectangle!</Button>
-          <Button onClick={this._removeRect} bsStyle="primary">Delete Rectangle!</Button>
+          <Button style={styles.button} onClick={this._addRect} bsStyle="primary">Add Rectangle!</Button>
+          <Button style={styles.button} onClick={this._removeRect} bsStyle="primary">Delete Rectangle!</Button>
         </div>
         <div style={styles.game} id="board">
           {this.state.rectList}
