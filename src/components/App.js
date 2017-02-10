@@ -31,33 +31,40 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { rectList: [] };
     this._addRect = this._addRect.bind(this);
     this._removeRect = this._removeRect.bind(this);
     this._clear = this._clear.bind(this);
   }
   componentWillMount() {
-    let rectList = this.state.rectList;
-    for (let i = 0; i < localStorage.getItem('rectList'); i++){
-      rectList = rectList.concat(<Rectangle key={rectList.length + 1} customColor={this._randColor()}/>);
+    let newRectList = [];
+    if (JSON.parse(localStorage.getItem('rectList'))) {
+      var rectList = JSON.parse(localStorage.getItem('rectList'));
+    } else {
+      rectList = [];
+    }
+
+    for (let i = 0; i < rectList.length; i++){
+      newRectList.push(<Rectangle key={i + 1} customColor={rectList[i]['props']['customColor']}/>);
     }
     this.setState({
-      rectList: rectList
+      rectList: newRectList
     });
   }
 
   _randColor() {
-    let randNum = () => { return Math.floor(Math.random() * 256); } ;
+    let randNum = () => {
+      return Math.floor(Math.random() * 256);
+    };
     return `rgb(${randNum()},${randNum()},${randNum()})`;
   }
 
   _addRect() {
-    const rectList = this.state.rectList;
+    let rectList = this.state.rectList;
+    rectList.push(<Rectangle key={rectList.length + 1} customColor={this._randColor()}/>);
     this.setState({
-      rectList: rectList.concat(<Rectangle key={rectList.length + 1} customColor={this._randColor()}/>)
+      rectList: rectList
     });
-    localStorage.setItem('rectList', rectList.length + 1);
-    // SET randColor return value to var and add it to localstorage as well!
+    localStorage.setItem('rectList', JSON.stringify(rectList));
   }
 
   _removeRect() {
@@ -73,7 +80,7 @@ class App extends Component {
     this.setState({
       rectList: []
     });
-    localStorage.setItem('rectList', 0);
+    localStorage.setItem('rectList', []);
   }
 
 
