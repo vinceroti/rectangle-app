@@ -29,9 +29,18 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { rectList: []};
+    this.state = { rectList: [] };
     this._addRect = this._addRect.bind(this);
     this._removeRect = this._removeRect.bind(this);
+  }
+  componentWillMount() {
+    let rectList = this.state.rectList;
+    for (let i = 0; i < localStorage.getItem('rectList'); i++){
+      rectList = rectList.concat(<Rectangle key={rectList.length + 1} customColor={this._randColor()}/>);
+    }
+    this.setState({
+      rectList: rectList
+    });
   }
 
   _randColor() {
@@ -41,10 +50,10 @@ class App extends Component {
 
   _addRect() {
     const rectList = this.state.rectList;
-
     this.setState({
       rectList: rectList.concat(<Rectangle key={rectList.length + 1} customColor={this._randColor()}/>)
     });
+    localStorage.setItem('rectList', rectList.length + 1);
   }
 
   _removeRect() {
@@ -53,6 +62,7 @@ class App extends Component {
     this.setState({
       rectList: rectList
     });
+    localStorage.setItem('rectList', rectList.length);
   }
 
 
