@@ -19,7 +19,9 @@ const styles = {
   },
   buttons: {
     textAlign: 'center',
-    marginBottom: 10
+  },
+  button: {
+    margin: '5px'
   }
 };
 
@@ -46,7 +48,7 @@ class App extends Component {
   }
 
   _removeRect() {
-    let rectList = this.state.rectList
+    let rectList = this.state.rectList;
     rectList.pop();
     this.setState({
       rectList: rectList
@@ -59,8 +61,8 @@ class App extends Component {
       <div>
         <h1 style={styles.head}> Rectangle Game </h1>
         <div style={styles.buttons}>
-          <Button onClick={this._addRect} bsStyle="primary">Add Rectangle!</Button>
-          <Button onClick={this._removeRect} bsStyle="primary">Delete Rectangle!</Button>
+          <Button style={styles.button} onClick={this._addRect} bsStyle="primary">Add Rectangle!</Button>
+          <Button style={styles.button} onClick={this._removeRect} bsStyle="primary">Delete Rectangle!</Button>
         </div>
         <div style={styles.game} id="board">
           {this.state.rectList}

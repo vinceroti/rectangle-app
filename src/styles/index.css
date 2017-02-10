@@ -6,7 +6,7 @@ body {
   background-image: url('../images/background.png');
 }
 
-/*Resizable box css*/
+/*Resizable box corner*/
 
 .react-resizable-handle {
   position: absolute;
