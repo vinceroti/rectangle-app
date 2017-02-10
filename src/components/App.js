@@ -9,13 +9,15 @@ const styles = {
     fontWeight: 'bold'
   },
   game: {
+    boxSizing: 'border-box',
     padding: 5,
     margin: '0 auto',
     height: '50%',
     width: '70%',
-    borderRadius: 12,
+    borderRadius: 4,
     border: '2px solid black',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    overflow: 'auto'
   },
   buttons: {
     textAlign: 'center',
@@ -32,6 +34,7 @@ class App extends Component {
     this.state = { rectList: [] };
     this._addRect = this._addRect.bind(this);
     this._removeRect = this._removeRect.bind(this);
+    this._clear = this._clear.bind(this);
   }
   componentWillMount() {
     let rectList = this.state.rectList;
@@ -54,6 +57,7 @@ class App extends Component {
       rectList: rectList.concat(<Rectangle key={rectList.length + 1} customColor={this._randColor()}/>)
     });
     localStorage.setItem('rectList', rectList.length + 1);
+    // SET randColor return value to var and add it to localstorage as well!
   }
 
   _removeRect() {
@@ -65,6 +69,13 @@ class App extends Component {
     localStorage.setItem('rectList', rectList.length);
   }
 
+  _clear() {
+    this.setState({
+      rectList: []
+    });
+    localStorage.setItem('rectList', 0);
+  }
+
 
   render() {
     return (
@@ -73,6 +84,7 @@ class App extends Component {
         <div style={styles.buttons}>
           <Button style={styles.button} onClick={this._addRect} bsStyle="primary">Add Rectangle!</Button>
           <Button style={styles.button} onClick={this._removeRect} bsStyle="primary">Delete Rectangle!</Button>
+          <Button style={styles.button} onClick={this._clear} bsStyle="primary">Clear Board!</Button>
         </div>
         <div style={styles.game} id="board">
           {this.state.rectList}
