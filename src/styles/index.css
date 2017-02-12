@@ -6,8 +6,13 @@ body {
   background-image: url('../images/background.png');
 }
 
-/*Resizable box corner*/
+.sketch-picker {
+  margin-left: 20px;
+  display: inline-block;
+  vertical-align: top;
+}
 
+/*Resizable box*/
 .react-resizable-handle {
   position: absolute;
   width: 20px;
