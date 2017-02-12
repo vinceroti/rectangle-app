@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
 import Rectangle from './rectangle';
+import { SketchPicker } from 'react-color';
 
 const styles = {
   head: {
@@ -9,15 +10,19 @@ const styles = {
     fontWeight: 'bold'
   },
   game: {
+    display: 'inline-block',
+    position: 'relative',
     boxSizing: 'border-box',
     padding: 5,
-    margin: '0 auto',
-    height: '50%',
+    margin: 'auto',
     width: '70%',
+    height: 600,
     borderRadius: 4,
     border: '2px solid black',
     backgroundColor: 'white',
     overflow: 'auto'
+  },
+  gameWrapper: {
   },
   buttons: {
     textAlign: 'center',
@@ -34,6 +39,8 @@ class App extends Component {
     this._addRect = this._addRect.bind(this);
     this._removeRect = this._removeRect.bind(this);
     this._clear = this._clear.bind(this);
+    this._colorSetter = this._colorSetter.bind(this);
+    this._save = this._save.bind(this);
   }
   componentWillMount() {
     let newRectList = [];
@@ -44,13 +51,13 @@ class App extends Component {
     }
 
     for (let i = 0; i < rectList.length; i++){
-      newRectList.push(<Rectangle key={i + 1} customColor={rectList[i]['props']['customColor']}/>);
+      let rect = rectList[i];
+      newRectList.push(<Rectangle key={i} width={rect['width']} height={rect['height']} top={rect['top']} left={rect['left']} color={rect['color']}/>);
     }
     this.setState({
       rectList: newRectList
     });
   }
-
   _randColor() {
     let randNum = () => {
       return Math.floor(Math.random() * 256);
@@ -60,7 +67,7 @@ class App extends Component {
 
   _addRect() {
     let rectList = this.state.rectList;
-    rectList.push(<Rectangle key={rectList.length + 1} customColor={this._randColor()}/>);
+    rectList.push(<Rectangle key={rectList.length} color={this._randColor()}/>);
     this.setState({
       rectList: rectList
     });
@@ -80,7 +87,29 @@ class App extends Component {
     this.setState({
       rectList: []
     });
-    localStorage.setItem('rectList', []);
+    localStorage.setItem('rectList', false);
+  }
+
+  _colorSetter() {
+    this.setState({
+      color: this.sketchColor.state.hex
+    });
+  }
+
+  _save() {
+    let newRectList = [];
+    // let rectList = document.querySelector('#board').children;
+    let rectList = this.state.rectList;
+    for (let i = 0; i < rectList.length; i++){
+      let rect = rectList[i];
+
+
+
+
+      newRectList.push({key: i, color: rect.props.color});
+    }
+    localStorage.setItem('rectList', JSON.stringify(newRectList));
+    // find element and get its width, height, color, top, left
   }
 
 
@@ -92,9 +121,13 @@ class App extends Component {
           <Button style={styles.button} onClick={this._addRect} bsStyle="primary">Add Rectangle!</Button>
           <Button style={styles.button} onClick={this._removeRect} bsStyle="primary">Delete Rectangle!</Button>
           <Button style={styles.button} onClick={this._clear} bsStyle="primary">Clear Board!</Button>
+          <Button style={styles.button} onClick={this._save} bsStyle="primary">Save Layout!</Button>
         </div>
-        <div style={styles.game} id="board">
-          {this.state.rectList}
+        <div style={styles.gameWrapper}>
+          <div onChange={this.save}  style={styles.game} id="board">
+            {this.state.rectList}
+          </div>
+          <SketchPicker onChange={this._colorSetter} ref={(e) => { this.sketchColor = e;}}/>
         </div>
       </div>
     );
