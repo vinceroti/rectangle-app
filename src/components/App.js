@@ -40,7 +40,8 @@ class App extends Component {
     this._removeRect = this._removeRect.bind(this);
     this._clear = this._clear.bind(this);
     this._colorSetter = this._colorSetter.bind(this);
-    this._save = this._save.bind(this);
+    // this._save = this._save.bind(this);
+    this._rectChangeCallback = this._rectChangeCallback.bind(this);
   }
   componentWillMount() {
     let newRectList = [];
@@ -52,12 +53,13 @@ class App extends Component {
 
     for (let i = 0; i < rectList.length; i++){
       let rect = rectList[i];
-      newRectList.push(<Rectangle key={i} width={rect['width']} height={rect['height']} top={rect['top']} left={rect['left']} color={rect['color']}/>);
+      newRectList.push(<Rectangle rectKey={i} key={i} parentCallBack={this._rectChangeCallback} x={rect['props']['x']} y={rect['props']['y']} width={rect['props']['width']} height={rect['props']['height']} color={rect['props']['color']}/>);
     }
     this.setState({
       rectList: newRectList
     });
   }
+
   _randColor() {
     let randNum = () => {
       return Math.floor(Math.random() * 256);
@@ -67,7 +69,7 @@ class App extends Component {
 
   _addRect() {
     let rectList = this.state.rectList;
-    rectList.push(<Rectangle key={rectList.length} color={this._randColor()}/>);
+    rectList.push(<Rectangle x={0} y={0} rectKey={rectList.length} key={rectList.length} parentCallBack={this._rectChangeCallback} width={200} height={120} color={this._randColor()}/>);
     this.setState({
       rectList: rectList
     });
@@ -96,22 +98,27 @@ class App extends Component {
     });
   }
 
-  _save() {
-    let newRectList = [];
-    // let rectList = document.querySelector('#board').children;
-    let rectList = this.state.rectList;
-    for (let i = 0; i < rectList.length; i++){
-      let rect = rectList[i];
+  // _save() {
+  //   let newRectList = [];
+  //   let rectList = this.state.rectList;
+  //   for (let i = 0; i < rectList.length; i++){
+  //     let rect = rectList[i];
 
+  //     newRectList.push({key: i, color: rect.props.color});
+  //   }
+  //   localStorage.setItem('rectList', JSON.stringify(newRectList));
+  //   // find element and get its width, height, color, top, left
+  // }
 
-
-
-      newRectList.push({key: i, color: rect.props.color});
-    }
-    localStorage.setItem('rectList', JSON.stringify(newRectList));
-    // find element and get its width, height, color, top, left
+  _rectChangeCallback(key, rectState) {
+    let rectList = JSON.parse(localStorage.getItem('rectList'));
+    rectList[key]['props']['x'] = rectState.x;
+    rectList[key]['props']['y'] = rectState.y;
+    rectList[key]['props']['height'] = rectState.height;
+    rectList[key]['props']['width'] = rectState.width;
+    localStorage.setItem('rectList', JSON.stringify(rectList));
+    // save individual rectangle
   }
-
 
   render() {
     return (
@@ -121,7 +128,7 @@ class App extends Component {
           <Button style={styles.button} onClick={this._addRect} bsStyle="primary">Add Rectangle!</Button>
           <Button style={styles.button} onClick={this._removeRect} bsStyle="primary">Delete Rectangle!</Button>
           <Button style={styles.button} onClick={this._clear} bsStyle="primary">Clear Board!</Button>
-          <Button style={styles.button} onClick={this._save} bsStyle="primary">Save Layout!</Button>
+         {/* <Button style={styles.button} onClick={this._save} bsStyle="primary">Save Layout!</Button>*/}
         </div>
         <div style={styles.gameWrapper}>
           <div onChange={this.save}  style={styles.game} id="board">
