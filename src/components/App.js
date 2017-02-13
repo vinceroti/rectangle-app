@@ -103,7 +103,6 @@ class App extends Component {
   _rectChangeCallback(key, rectState) {
     let layout =  this.state.layout;
     let rectList = JSON.parse(localStorage.getItem('rectList' + layout) );
-    console.log(rectList);
     rectList[key]['props']['x'] = rectState.x;
     rectList[key]['props']['y'] = rectState.y;
     rectList[key]['props']['height'] = rectState.height;
@@ -128,6 +127,7 @@ class App extends Component {
           </DropdownButton>
         </div>
         <div style={styles.gameWrapper}>
+        <h5 style={{textAlign: 'center'}}> Bottom right of rectangle to resize and top handle to move it </h5>
           <div onChange={this.save}  style={styles.game}>
             {this.state.rectList}
           </div>
