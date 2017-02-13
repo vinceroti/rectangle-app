@@ -10,6 +10,8 @@ class Rectangle extends Component {
     this._hoverHandle = this._hoverHandle.bind(this);
     this._clickHandle = this._clickHandle.bind(this);
     this.state = {
+      x: this.props.x,
+      y: this.props.y,
       color: this.props.color,
       height: this.props.height ? this.props.height : 120,
       width: this.props.width ? this.props.width : 200
