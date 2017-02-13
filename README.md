@@ -16,3 +16,13 @@ You can:
  
 ### Everything is saved to local storage automatically
 ##### This is built in React.js
+
+
+Currently tested WORKING on:
+  - Linux: Chrome
+  - Windows: Chrome, IE Edge, 
+
+Currently tested NOT WORKING on:
+ - Windows: Internet Explorer 11, Firefox
+ - Linux: Firefox,
+ 
