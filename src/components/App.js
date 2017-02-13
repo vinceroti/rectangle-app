@@ -35,6 +35,7 @@ const styles = {
 class App extends Component {
   constructor(props) {
     super(props);
+    this.state = { layout: 1 };
 
     this._addRect = this._addRect.bind(this);
     this._removeRect = this._removeRect.bind(this);
@@ -53,7 +54,7 @@ class App extends Component {
 
     for (let i = 0; i < rectList.length; i++){
       let rect = rectList[i]; // if two elements are created with the same key, they have the same properties
-      newRectList.push(<Rectangle rectKey={i} key={`rectList${layout}-${i}`} parentCallBack={this._rectChangeCallback} x={rect['props']['x']} y={rect['props']['y']} width={rect['props']['width']} height={rect['props']['height']} color={rect['props']['color']}/>);
+      newRectList.push(<Rectangle sketchColor={this.sketchColor} rectKey={i} key={`rectList${layout}-${i}`} parentCallBack={this._rectChangeCallback} x={rect['props']['x']} y={rect['props']['y']} width={rect['props']['width']} height={rect['props']['height']} color={rect['props']['color']}/>);
     }
 
     this.setState({
@@ -62,22 +63,24 @@ class App extends Component {
     });
   }
 
-  componentWillMount() {
-    this.setState({
-      layout: 1
-    });
-    this._getRectsFromLocal(1);
+  componentDidMount() {
+    this._getRectsFromLocal(this.state.layout);
   }
 
   _addRect() {
     let layout = this.state.layout;
+    let storRect = [];
     let rectList = this.state.rectList;
 
-    rectList.push(<Rectangle x={0} y={0} rectKey={rectList.length} key={`rectList${layout}-${rectList.length}`} parentCallBack={this._rectChangeCallback} width={200} height={120} color={this.sketchColor.state.hex}/>);
+    rectList.push(<Rectangle x={0} y={0} sketchColor={this.sketchColor}rectKey={rectList.length} key={`rectList${layout}-${rectList.length}`} parentCallBack={this._rectChangeCallback} width={200} height={120} color={this.sketchColor.state.hex}/>);
     this.setState({
       rectList: rectList
     });
-    localStorage.setItem('rectList' + layout, JSON.stringify(rectList));
+
+    storRect.push(<Rectangle x={0} y={0} rectKey={rectList.length} key={`rectList${layout}-${rectList.length}`} parentCallBack={this._rectChangeCallback} width={200} height={120} color={this.sketchColor.state.hex}/>);
+
+    // not DRY and just a quick fix to allow for sketchcolor, I can't stringify sketchColor
+    localStorage.setItem('rectList' + layout, JSON.stringify(storRect));
   }
 
   _removeRect() {
@@ -100,11 +103,12 @@ class App extends Component {
   _rectChangeCallback(key, rectState) {
     let layout =  this.state.layout;
     let rectList = JSON.parse(localStorage.getItem('rectList' + layout) );
-
+    console.log(rectList);
     rectList[key]['props']['x'] = rectState.x;
     rectList[key]['props']['y'] = rectState.y;
     rectList[key]['props']['height'] = rectState.height;
     rectList[key]['props']['width'] = rectState.width;
+    rectList[key]['props']['color'] = rectState.color;
     localStorage.setItem('rectList' + layout , JSON.stringify(rectList));
     // save individual rectangle
   }
