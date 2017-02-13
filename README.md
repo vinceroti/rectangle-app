@@ -26,3 +26,6 @@ Currently tested NOT WORKING on:
  - Windows: Internet Explorer 11, Firefox
  - Linux: Firefox,
  
+Current known bugs:
+  - When dragging rectangle, it changes the color to the current color wheel color
+ 
