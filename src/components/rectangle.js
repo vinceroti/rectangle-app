@@ -8,17 +8,25 @@ class Rectangle extends Component {
   constructor(props){
     super(props);
     this._hoverHandle = this._hoverHandle.bind(this);
-    this.state = {x: 0, y: 0};
-  }
-  componentDidMount(){
-    this.setState({x: this.drag.state.x, y: this.drag.state.y});
+    this.state = {
+      height: this.props.height ? this.props.height : 120,
+      width: this.props.width ? this.props.width : 200
+    };
   }
   _hoverHandle() {
-    this.setState({x: this.drag.state.x, y: this.drag.state.y});
+    console.log("IM HIT")
+    this.setState({
+      x: this.drag.state.x + this.props.x,
+      y: this.drag.state.y + this.props.y,
+      height: this.box.state.height,
+      width: this.box.state.width
+    });
+
+    this.props.parentCallBack(this.props.rectKey, this.state);
   }
 
   render() {
-    const styles = {
+    let styles = {
       button: {
         position: 'absolute',
         margin: 0,
@@ -27,10 +35,8 @@ class Rectangle extends Component {
         border: 'none',
         borderWidth: 0,
         outline: 0,
-        width: this.props.width,
-        height: this.props.height,
-        top: this.props.top,
-        left: this.props.left,
+        top: this.props.y,
+        left: this.props.x
       },
       handle: {
         cursor: 'move',
@@ -44,16 +50,16 @@ class Rectangle extends Component {
       }
     };
     const tooltip = (
-      <Tooltip id="tooltip"><strong>Click to the color to the color wheel!</strong></Tooltip>
+      <Tooltip id="tooltip"><strong>Click to change the color to the color wheel!</strong></Tooltip>
     );
 
     return (
-      <Draggable ref={(e) => { this.drag = e;}} handle=".handle">
-        <button onMouseLeave={this._hoverHandle} style={styles.button}>
+      <Draggable  ref={(e) => { this.drag = e;}} handle=".handle">
+        <button onMouseLeave={this._hoverHandle} onMouseOver={this._hoverHandle} onMouseEnter={this._hoverHandle} style={styles.button}>
           <div style={styles.box}>
             <OverlayTrigger placement="bottom" overlay={tooltip}>
 
-              <ResizableBox width={200} height={120} lockAspectRatio={true}  minConstraints={[50, 30]}>
+              <ResizableBox ref={(e) => { this.box = e;}} width={this.state.width} height={this.state.height} lockAspectRatio={true}  minConstraints={[50, 30]}>
                 <div style={styles.handle} className="handle"></div>
               </ResizableBox>
             </OverlayTrigger>
