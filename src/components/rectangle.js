@@ -15,6 +15,8 @@ class Rectangle extends Component {
     };
   }
   _hoverHandle() {
+    console.log(this.drag.state.x)
+    console.log(this.drag.state.y)
     this.setState({
       x: this.drag.state.x + this.props.x,
       y: this.drag.state.y + this.props.y,
@@ -26,7 +28,6 @@ class Rectangle extends Component {
   }
 
   _clickHandle() {
-
 
     this.setState({
       color: ""
@@ -67,7 +68,7 @@ class Rectangle extends Component {
           <div style={styles.box}>
             <OverlayTrigger placement="bottom" overlay={tooltip}>
 
-              <ResizableBox ref={(e) => { this.box = e;}} width={this.state.width} height={this.state.height} lockAspectRatio={true}  minConstraints={[50, 30]}>
+              <ResizableBox ref={(e) => { this.box = e;}} width={this.props.width} height={this.props.height} lockAspectRatio={true}  minConstraints={[50, 30]}>
                 <div style={styles.handle} className="handle"></div>
               </ResizableBox>
             </OverlayTrigger>
