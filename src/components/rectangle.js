@@ -8,13 +8,13 @@ class Rectangle extends Component {
   constructor(props){
     super(props);
     this._hoverHandle = this._hoverHandle.bind(this);
+    this._clickHandle = this._hoverHandle.bind(this);
     this.state = {
       height: this.props.height ? this.props.height : 120,
       width: this.props.width ? this.props.width : 200
     };
   }
   _hoverHandle() {
-    console.log("IM HIT")
     this.setState({
       x: this.drag.state.x + this.props.x,
       y: this.drag.state.y + this.props.y,
@@ -23,6 +23,14 @@ class Rectangle extends Component {
     });
 
     this.props.parentCallBack(this.props.rectKey, this.state);
+  }
+
+  _clickHandle() {
+
+
+    this.setState({
+      color: ""
+    });
   }
 
   render() {
@@ -55,7 +63,7 @@ class Rectangle extends Component {
 
     return (
       <Draggable  ref={(e) => { this.drag = e;}} handle=".handle">
-        <button onMouseLeave={this._hoverHandle} onMouseOver={this._hoverHandle} onMouseEnter={this._hoverHandle} style={styles.button}>
+        <button onMouseLeave={this._hoverHandle} onMouseOver={this._hoverHandle} onMouseEnter={this._hoverHandle} onClick={this._handleClick} style={styles.button}>
           <div style={styles.box}>
             <OverlayTrigger placement="bottom" overlay={tooltip}>
 
