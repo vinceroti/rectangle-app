@@ -69,8 +69,13 @@ class App extends Component {
 
   _addRect() {
     let layout = this.state.layout;
-    let storRect = [];
     let rectList = this.state.rectList;
+
+    if (JSON.parse(localStorage.getItem('rectList' + layout))) {
+      var storRect = JSON.parse(localStorage.getItem('rectList' + layout));
+    } else {
+      storRect = [];
+    }
 
     rectList.push(<Rectangle x={0} y={0} sketchColor={this.sketchColor}rectKey={rectList.length} key={`rectList${layout}-${rectList.length}`} parentCallBack={this._rectChangeCallback} width={200} height={120} color={this.sketchColor.state.hex}/>);
     this.setState({
@@ -78,7 +83,7 @@ class App extends Component {
     });
 
     storRect.push(<Rectangle x={0} y={0} rectKey={rectList.length} key={`rectList${layout}-${rectList.length}`} parentCallBack={this._rectChangeCallback} width={200} height={120} color={this.sketchColor.state.hex}/>);
-
+    console.log(storRect);
     // not DRY and just a quick fix to allow for sketchcolor, I can't stringify sketchColor
     localStorage.setItem('rectList' + layout, JSON.stringify(storRect));
   }
@@ -103,6 +108,7 @@ class App extends Component {
   _rectChangeCallback(key, rectState) {
     let layout =  this.state.layout;
     let rectList = JSON.parse(localStorage.getItem('rectList' + layout) );
+    console.log(rectList);
     rectList[key]['props']['x'] = rectState.x;
     rectList[key]['props']['y'] = rectState.y;
     rectList[key]['props']['height'] = rectState.height;
