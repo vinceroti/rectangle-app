@@ -27,5 +27,5 @@ Currently tested NOT WORKING on:
  - Linux: Firefox,
  
 Current known bugs:
-  - When dragging rectangle, it changes the color to the current color wheel color
+  - When dragging rectangle, it changes the color to the current color wheel color (Need to change order of DOM elements)
  
