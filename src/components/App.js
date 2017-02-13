@@ -39,7 +39,7 @@ class App extends Component {
     this._addRect = this._addRect.bind(this);
     this._removeRect = this._removeRect.bind(this);
     this._clear = this._clear.bind(this);
-    this._colorSetter = this._colorSetter.bind(this);
+    // this._colorSetter = this._colorSetter.bind(this);
     this._rectChangeCallback = this._rectChangeCallback.bind(this);
   }
   componentWillMount() {
@@ -59,16 +59,16 @@ class App extends Component {
     });
   }
 
-  _randColor() {
-    let randNum = () => {
-      return Math.floor(Math.random() * 256);
-    };
-    return `rgb(${randNum()},${randNum()},${randNum()})`;
-  }
+  // _randColor() {
+  //   let randNum = () => {
+  //     return Math.floor(Math.random() * 256);
+  //   };
+  //   return `rgb(${randNum()},${randNum()},${randNum()})`;
+  // }
 
   _addRect() {
     let rectList = this.state.rectList;
-    rectList.push(<Rectangle x={0} y={0} rectKey={rectList.length} key={rectList.length} parentCallBack={this._rectChangeCallback} width={200} height={120} color={this._randColor()}/>);
+    rectList.push(<Rectangle x={0} y={0} rectKey={rectList.length} key={rectList.length} parentCallBack={this._rectChangeCallback} width={200} height={120} color={this.sketchColor.state.hex}/>);
     this.setState({
       rectList: rectList
     });
@@ -91,12 +91,11 @@ class App extends Component {
     localStorage.setItem('rectList', false);
   }
 
-  _colorSetter() {
-    console.log("test")
-    this.setState({
-      color: this.sketchColor.state.hex
-    });
-  }
+  // _colorSetter() {
+  //   this.setState({
+  //     color: this.sketchColor.state.hex
+  //   });
+  // }
 
   _rectChangeCallback(key, rectState) {
     let rectList = JSON.parse(localStorage.getItem('rectList'));
@@ -122,7 +121,7 @@ class App extends Component {
           <div onChange={this.save}  style={styles.game} id="board">
             {this.state.rectList}
           </div>
-          <SketchPicker onMouseLeave={this._colorSetter} ref={(e) => { this.sketchColor = e;}}/>
+          <SketchPicker ref={(e) => { this.sketchColor = e;}}/>
         </div>
       </div>
     );
