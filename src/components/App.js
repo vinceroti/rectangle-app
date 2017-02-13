@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, DropdownButton, MenuItem } from 'react-bootstrap';
 import Rectangle from './rectangle';
 import { SketchPicker } from 'react-color';
 
@@ -39,24 +39,34 @@ class App extends Component {
     this._addRect = this._addRect.bind(this);
     this._removeRect = this._removeRect.bind(this);
     this._clear = this._clear.bind(this);
-    // this._colorSetter = this._colorSetter.bind(this);
     this._rectChangeCallback = this._rectChangeCallback.bind(this);
+    this._getRectsFromLocal = this._getRectsFromLocal.bind(this);
   }
-  componentWillMount() {
+
+  _getRectsFromLocal(layout) {
     let newRectList = [];
-    if (JSON.parse(localStorage.getItem('rectList'))) {
-      var rectList = JSON.parse(localStorage.getItem('rectList'));
+    if (JSON.parse(localStorage.getItem('rectList' + layout))) {
+      var rectList = JSON.parse(localStorage.getItem('rectList' + layout));
     } else {
       rectList = [];
     }
-
+    console.log(rectList);
     for (let i = 0; i < rectList.length; i++){
       let rect = rectList[i];
-      newRectList.push(<Rectangle rectKey={i} key={i} parentCallBack={this._rectChangeCallback} x={rect['props']['x']} y={rect['props']['y']} width={rect['props']['width']} height={rect['props']['height']} color={rect['props']['color']}/>);
+      newRectList.push(<Rectangle rectKey={i} key={layout + i} parentCallBack={this._rectChangeCallback} x={rect['props']['x']} y={rect['props']['y']} width={rect['props']['width']} height={rect['props']['height']} color={rect['props']['color']}/>);
     }
+
     this.setState({
+      layout: layout,
       rectList: newRectList
     });
+  }
+
+  componentWillMount() {
+    this.setState({
+      layout: 1
+    });
+    this._getRectsFromLocal(1);
   }
 
   // _randColor() {
@@ -67,12 +77,14 @@ class App extends Component {
   // }
 
   _addRect() {
+    let layout = this.state.layout;
     let rectList = this.state.rectList;
+
     rectList.push(<Rectangle x={0} y={0} rectKey={rectList.length} key={rectList.length} parentCallBack={this._rectChangeCallback} width={200} height={120} color={this.sketchColor.state.hex}/>);
     this.setState({
       rectList: rectList
     });
-    localStorage.setItem('rectList', JSON.stringify(rectList));
+    localStorage.setItem('rectList' + layout, JSON.stringify(rectList));
   }
 
   _removeRect() {
@@ -81,14 +93,14 @@ class App extends Component {
     this.setState({
       rectList: rectList
     });
-    localStorage.setItem('rectList', rectList.length);
+    localStorage.setItem('rectList' + this.state.layout, rectList.length);
   }
 
   _clear() {
     this.setState({
       rectList: []
     });
-    localStorage.setItem('rectList', false);
+    localStorage.setItem('rectList' + this.state.layout, false);
   }
 
   // _colorSetter() {
@@ -98,13 +110,14 @@ class App extends Component {
   // }
 
   _rectChangeCallback(key, rectState) {
-    let rectList = JSON.parse(localStorage.getItem('rectList'));
-
+    let layout =  this.state.layout;
+    let rectList = JSON.parse(localStorage.getItem('rectList' + layout) );
+    console.log(layout);
     rectList[key]['props']['x'] = rectState.x;
     rectList[key]['props']['y'] = rectState.y;
     rectList[key]['props']['height'] = rectState.height;
     rectList[key]['props']['width'] = rectState.width;
-    localStorage.setItem('rectList', JSON.stringify(rectList));
+    localStorage.setItem('rectList' + layout , JSON.stringify(rectList));
     // save individual rectangle
   }
 
@@ -116,6 +129,11 @@ class App extends Component {
           <Button style={styles.button} onClick={this._addRect} bsStyle="primary">Add Rectangle!</Button>
           <Button style={styles.button} onClick={this._removeRect} bsStyle="primary">Delete Rectangle!</Button>
           <Button style={styles.button} onClick={this._clear} bsStyle="primary">Clear Board!</Button>
+          <DropdownButton style={styles.button} bsStyle="primary" title="Layout" id="bg-justified-dropdown">
+            <MenuItem onClick={()=> {this._getRectsFromLocal(1);}} eventKey="1">Layout 1</MenuItem>
+            <MenuItem onClick={()=> {this._getRectsFromLocal(2);}}  eventKey="2">Layout 2</MenuItem>
+            <MenuItem onClick={()=> {this._getRectsFromLocal(3) ;}}  eventKey="3">Layout 3</MenuItem>
+          </DropdownButton>
         </div>
         <div style={styles.gameWrapper}>
           <div onChange={this.save}  style={styles.game} id="board">
