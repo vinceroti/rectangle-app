@@ -8,14 +8,16 @@ class Rectangle extends Component {
   constructor(props){
     super(props);
     this._hoverHandle = this._hoverHandle.bind(this);
-  }
-  componentDidMount(){
-    this.setState({x: this.drag.state.x, y: this.drag.state.y});
+    this.state = {
+      height: this.props.height ? this.props.height : 120,
+      width: this.props.width ? this.props.width : 200
+    };
   }
   _hoverHandle() {
+    console.log("IM HIT")
     this.setState({
-      x: this.drag.state.x,
-      y: this.drag.state.y,
+      x: this.drag.state.x + this.props.x,
+      y: this.drag.state.y + this.props.y,
       height: this.box.state.height,
       width: this.box.state.width
     });
@@ -53,11 +55,11 @@ class Rectangle extends Component {
 
     return (
       <Draggable  ref={(e) => { this.drag = e;}} handle=".handle">
-        <button onMouseLeave={this._hoverHandle} style={styles.button}>
+        <button onMouseLeave={this._hoverHandle} onMouseOver={this._hoverHandle} onMouseEnter={this._hoverHandle} style={styles.button}>
           <div style={styles.box}>
             <OverlayTrigger placement="bottom" overlay={tooltip}>
 
-              <ResizableBox ref={(e) => { this.box = e;}} width={this.props.width} height={this.props.height} lockAspectRatio={true}  minConstraints={[50, 30]}>
+              <ResizableBox ref={(e) => { this.box = e;}} width={this.state.width} height={this.state.height} lockAspectRatio={true}  minConstraints={[50, 30]}>
                 <div style={styles.handle} className="handle"></div>
               </ResizableBox>
             </OverlayTrigger>

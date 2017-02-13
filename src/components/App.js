@@ -40,7 +40,6 @@ class App extends Component {
     this._removeRect = this._removeRect.bind(this);
     this._clear = this._clear.bind(this);
     this._colorSetter = this._colorSetter.bind(this);
-    // this._save = this._save.bind(this);
     this._rectChangeCallback = this._rectChangeCallback.bind(this);
   }
   componentWillMount() {
@@ -93,25 +92,15 @@ class App extends Component {
   }
 
   _colorSetter() {
+    console.log("test")
     this.setState({
       color: this.sketchColor.state.hex
     });
   }
 
-  // _save() {
-  //   let newRectList = [];
-  //   let rectList = this.state.rectList;
-  //   for (let i = 0; i < rectList.length; i++){
-  //     let rect = rectList[i];
-
-  //     newRectList.push({key: i, color: rect.props.color});
-  //   }
-  //   localStorage.setItem('rectList', JSON.stringify(newRectList));
-  //   // find element and get its width, height, color, top, left
-  // }
-
   _rectChangeCallback(key, rectState) {
     let rectList = JSON.parse(localStorage.getItem('rectList'));
+
     rectList[key]['props']['x'] = rectState.x;
     rectList[key]['props']['y'] = rectState.y;
     rectList[key]['props']['height'] = rectState.height;
@@ -128,13 +117,12 @@ class App extends Component {
           <Button style={styles.button} onClick={this._addRect} bsStyle="primary">Add Rectangle!</Button>
           <Button style={styles.button} onClick={this._removeRect} bsStyle="primary">Delete Rectangle!</Button>
           <Button style={styles.button} onClick={this._clear} bsStyle="primary">Clear Board!</Button>
-         {/* <Button style={styles.button} onClick={this._save} bsStyle="primary">Save Layout!</Button>*/}
         </div>
         <div style={styles.gameWrapper}>
           <div onChange={this.save}  style={styles.game} id="board">
             {this.state.rectList}
           </div>
-          <SketchPicker onChange={this._colorSetter} ref={(e) => { this.sketchColor = e;}}/>
+          <SketchPicker onMouseLeave={this._colorSetter} ref={(e) => { this.sketchColor = e;}}/>
         </div>
       </div>
     );
