@@ -8,29 +8,28 @@ class Rectangle extends Component {
   constructor(props){
     super(props);
     this._hoverHandle = this._hoverHandle.bind(this);
-    this._clickHandle = this._hoverHandle.bind(this);
+    this._clickHandle = this._clickHandle.bind(this);
     this.state = {
+      color: this.props.color,
       height: this.props.height ? this.props.height : 120,
       width: this.props.width ? this.props.width : 200
     };
   }
   _hoverHandle() {
-    console.log(this.drag.state.x)
-    console.log(this.drag.state.y)
     this.setState({
       x: this.drag.state.x + this.props.x,
       y: this.drag.state.y + this.props.y,
       height: this.box.state.height,
-      width: this.box.state.width
+      width: this.box.state.width,
+      color: this.state.color
     });
 
     this.props.parentCallBack(this.props.rectKey, this.state);
   }
 
   _clickHandle() {
-
     this.setState({
-      color: ""
+      color: this.props.sketchColor.state.hex
     });
   }
 
@@ -55,7 +54,7 @@ class Rectangle extends Component {
       box: {
         position: 'absolute',
         border: '2px solid black',
-        background: this.props.color,
+        background: this.state.color,
       }
     };
     const tooltip = (
@@ -64,7 +63,7 @@ class Rectangle extends Component {
 
     return (
       <Draggable  ref={(e) => { this.drag = e;}} handle=".handle">
-        <button onMouseLeave={this._hoverHandle} onMouseOver={this._hoverHandle} onMouseEnter={this._hoverHandle} onClick={this._handleClick} style={styles.button}>
+        <button onMouseLeave={this._hoverHandle} onMouseOver={this._hoverHandle} onMouseEnter={this._hoverHandle} onClick={this._clickHandle} style={styles.button}>
           <div style={styles.box}>
             <OverlayTrigger placement="bottom" overlay={tooltip}>
 
