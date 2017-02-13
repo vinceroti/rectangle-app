@@ -41,16 +41,21 @@ class App extends Component {
     this._removeRect = this._removeRect.bind(this);
     this._clear = this._clear.bind(this);
     this._rectChangeCallback = this._rectChangeCallback.bind(this);
-    this._getRectsFromLocal = this._getRectsFromLocal.bind(this);
+    this._getRects = this._getRects.bind(this);
   }
 
-  _getRectsFromLocal(layout) {
-    let newRectList = [];
+  _checkLocalStorage(layout) {
     if (JSON.parse(localStorage.getItem('rectList' + layout))) {
       var rectList = JSON.parse(localStorage.getItem('rectList' + layout));
     } else {
       rectList = [];
     }
+    return rectList;
+  }
+
+  _getRects(layout) {
+    let newRectList = [];
+    let rectList = this._checkLocalStorage(layout);
 
     for (let i = 0; i < rectList.length; i++){
       let rect = rectList[i]; // if two elements are created with the same key, they have the same properties
@@ -64,18 +69,13 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this._getRectsFromLocal(this.state.layout);
+    this._getRects(this.state.layout);
   }
 
   _addRect() {
     let layout = this.state.layout;
     let rectList = this.state.rectList;
-
-    if (JSON.parse(localStorage.getItem('rectList' + layout))) {
-      var storRect = JSON.parse(localStorage.getItem('rectList' + layout));
-    } else {
-      storRect = [];
-    }
+    let storRect = this._checkLocalStorage(layout);
 
     rectList.push(<Rectangle x={0} y={0} sketchColor={this.sketchColor}rectKey={rectList.length} key={`rectList${layout}-${rectList.length}`} parentCallBack={this._rectChangeCallback} width={200} height={120} color={this.sketchColor.state.hex}/>);
     this.setState({
@@ -83,7 +83,6 @@ class App extends Component {
     });
 
     storRect.push(<Rectangle x={0} y={0} rectKey={rectList.length} key={`rectList${layout}-${rectList.length}`} parentCallBack={this._rectChangeCallback} width={200} height={120} color={this.sketchColor.state.hex}/>);
-    console.log(storRect);
     // not DRY and just a quick fix to allow for sketchcolor, I can't stringify sketchColor
     localStorage.setItem('rectList' + layout, JSON.stringify(storRect));
   }
@@ -108,7 +107,6 @@ class App extends Component {
   _rectChangeCallback(key, rectState) {
     let layout =  this.state.layout;
     let rectList = JSON.parse(localStorage.getItem('rectList' + layout) );
-    console.log(rectList);
     rectList[key]['props']['x'] = rectState.x;
     rectList[key]['props']['y'] = rectState.y;
     rectList[key]['props']['height'] = rectState.height;
@@ -127,9 +125,9 @@ class App extends Component {
           <Button style={styles.button} onClick={this._removeRect} bsStyle="primary">Delete Rectangle!</Button>
           <Button style={styles.button} onClick={this._clear} bsStyle="primary">Clear Board!</Button>
           <DropdownButton style={styles.button} bsStyle="primary" title={`Layout ${this.state.layout}`} id="bg-justified-dropdown">
-            <MenuItem onClick={()=> {this._getRectsFromLocal(1);}} eventKey="1">Layout 1</MenuItem>
-            <MenuItem onClick={()=> {this._getRectsFromLocal(2);}}  eventKey="2">Layout 2</MenuItem>
-            <MenuItem onClick={()=> {this._getRectsFromLocal(3) ;}}  eventKey="3">Layout 3</MenuItem>
+            <MenuItem onClick={()=> {this._getRects(1);}} eventKey="1">Layout 1</MenuItem>
+            <MenuItem onClick={()=> {this._getRects(2);}}  eventKey="2">Layout 2</MenuItem>
+            <MenuItem onClick={()=> {this._getRects(3) ;}}  eventKey="3">Layout 3</MenuItem>
           </DropdownButton>
         </div>
         <div style={styles.gameWrapper}>

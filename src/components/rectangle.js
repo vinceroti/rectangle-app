@@ -7,8 +7,6 @@ import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 class Rectangle extends Component {
   constructor(props){
     super(props);
-    this._hoverHandle = this._hoverHandle.bind(this);
-    this._clickHandle = this._clickHandle.bind(this);
     this.state = {
       x: this.props.x,
       y: this.props.y,
@@ -16,6 +14,9 @@ class Rectangle extends Component {
       height: this.props.height ? this.props.height : 120,
       width: this.props.width ? this.props.width : 200
     };
+
+    this._hoverHandle = this._hoverHandle.bind(this);
+    this._clickHandle = this._clickHandle.bind(this);
   }
   _hoverHandle() {
     this.setState({
