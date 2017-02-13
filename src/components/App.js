@@ -50,10 +50,10 @@ class App extends Component {
     } else {
       rectList = [];
     }
-    console.log(rectList);
+
     for (let i = 0; i < rectList.length; i++){
-      let rect = rectList[i];
-      newRectList.push(<Rectangle rectKey={i} key={layout + i} parentCallBack={this._rectChangeCallback} x={rect['props']['x']} y={rect['props']['y']} width={rect['props']['width']} height={rect['props']['height']} color={rect['props']['color']}/>);
+      let rect = rectList[i]; // if two elements are created with the same key, they have the same properties
+      newRectList.push(<Rectangle rectKey={i} key={`rectList${layout}-${i}`} parentCallBack={this._rectChangeCallback} x={rect['props']['x']} y={rect['props']['y']} width={rect['props']['width']} height={rect['props']['height']} color={rect['props']['color']}/>);
     }
 
     this.setState({
@@ -69,18 +69,11 @@ class App extends Component {
     this._getRectsFromLocal(1);
   }
 
-  // _randColor() {
-  //   let randNum = () => {
-  //     return Math.floor(Math.random() * 256);
-  //   };
-  //   return `rgb(${randNum()},${randNum()},${randNum()})`;
-  // }
-
   _addRect() {
     let layout = this.state.layout;
     let rectList = this.state.rectList;
 
-    rectList.push(<Rectangle x={0} y={0} rectKey={rectList.length} key={rectList.length} parentCallBack={this._rectChangeCallback} width={200} height={120} color={this.sketchColor.state.hex}/>);
+    rectList.push(<Rectangle x={0} y={0} rectKey={rectList.length} key={`rectList${layout}-${rectList.length}`} parentCallBack={this._rectChangeCallback} width={200} height={120} color={this.sketchColor.state.hex}/>);
     this.setState({
       rectList: rectList
     });
@@ -103,16 +96,11 @@ class App extends Component {
     localStorage.setItem('rectList' + this.state.layout, false);
   }
 
-  // _colorSetter() {
-  //   this.setState({
-  //     color: this.sketchColor.state.hex
-  //   });
-  // }
 
   _rectChangeCallback(key, rectState) {
     let layout =  this.state.layout;
     let rectList = JSON.parse(localStorage.getItem('rectList' + layout) );
-    console.log(layout);
+
     rectList[key]['props']['x'] = rectState.x;
     rectList[key]['props']['y'] = rectState.y;
     rectList[key]['props']['height'] = rectState.height;
@@ -129,14 +117,14 @@ class App extends Component {
           <Button style={styles.button} onClick={this._addRect} bsStyle="primary">Add Rectangle!</Button>
           <Button style={styles.button} onClick={this._removeRect} bsStyle="primary">Delete Rectangle!</Button>
           <Button style={styles.button} onClick={this._clear} bsStyle="primary">Clear Board!</Button>
-          <DropdownButton style={styles.button} bsStyle="primary" title="Layout" id="bg-justified-dropdown">
+          <DropdownButton style={styles.button} bsStyle="primary" title={`Layout ${this.state.layout}`} id="bg-justified-dropdown">
             <MenuItem onClick={()=> {this._getRectsFromLocal(1);}} eventKey="1">Layout 1</MenuItem>
             <MenuItem onClick={()=> {this._getRectsFromLocal(2);}}  eventKey="2">Layout 2</MenuItem>
             <MenuItem onClick={()=> {this._getRectsFromLocal(3) ;}}  eventKey="3">Layout 3</MenuItem>
           </DropdownButton>
         </div>
         <div style={styles.gameWrapper}>
-          <div onChange={this.save}  style={styles.game} id="board">
+          <div onChange={this.save}  style={styles.game}>
             {this.state.rectList}
           </div>
           <SketchPicker ref={(e) => { this.sketchColor = e;}}/>

@@ -15,8 +15,6 @@ class Rectangle extends Component {
     };
   }
   _hoverHandle() {
-    console.log(this.drag.state.x)
-    console.log(this.drag.state.y)
     this.setState({
       x: this.drag.state.x + this.props.x,
       y: this.drag.state.y + this.props.y,
